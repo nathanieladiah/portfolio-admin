@@ -1,6 +1,7 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { cilLockLocked, cilUser } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 import {
+  CAlert,
   CButton,
   CCard,
   CCardBody,
@@ -12,27 +13,88 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CSpinner,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import React, { useState } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { auth } from '../../../firebase.config'
+import useAuthStatus from '../../../hooks/useAuthStatus'
 
 const Login = () => {
+  const [loginError, setLoginError] = useState(false)
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  })
+
+  const { username, password } = formData
+  const { loggedIn, checkingStatus } = useAuthStatus
+
+  const navigate = useNavigate()
+
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }))
+  }
+
+  const onSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const userCredentials = await signInWithEmailAndPassword(auth, username, password)
+
+      if (userCredentials.user) {
+        navigate('/')
+      }
+    } catch (error) {
+      setLoginError(true)
+    }
+  }
+
+  if (checkingStatus) {
+    return <CSpinner />
+  }
+
+  if (loggedIn) {
+    return <Navigate to="/" />
+  }
+
   return (
-    <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
+    <div className="bg-body-tertiary min-vh-100 d-flex align-items-center flex-column justify-content-center">
+      {loginError && (
+        <CAlert
+          color="danger"
+          dismissible
+          onClose={() => {
+            setLoginError(false)
+          }}
+        >
+          <strong>Error:</strong> Invalid User Credentials
+        </CAlert>
+      )}
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={8}>
+          <CCol md={5}>
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={onSubmit}>
                     <h1>Login</h1>
                     <p className="text-body-secondary">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput
+                        placeholder="Username"
+                        autoComplete="username"
+                        onChange={onChange}
+                        value={username}
+                        name="username"
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -42,11 +104,14 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        onChange={onChange}
+                        value={password}
+                        name="password"
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton color="primary" className="px-4" type="submit">
                           Login
                         </CButton>
                       </CCol>
@@ -59,7 +124,7 @@ const Login = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
+              {/* <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>
@@ -74,7 +139,7 @@ const Login = () => {
                     </Link>
                   </div>
                 </CCardBody>
-              </CCard>
+              </CCard> */}
             </CCardGroup>
           </CCol>
         </CRow>
