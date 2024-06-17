@@ -1,4 +1,4 @@
-import { CSpinner } from '@coreui/react'
+import { Skeleton } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
@@ -9,11 +9,20 @@ const Messages = () => {
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState(null)
 
+  const [minimumTimeElapsed, setMinimumTimeElapsed] = useState(false)
+  const minimumTime = 500
+
   const navigate = useNavigate()
 
   const handleRowClick = (param, event) => {
     navigate(`/messages/${param.id}`)
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setMinimumTimeElapsed(true)
+    }, minimumTime)
+  }, [])
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -49,8 +58,8 @@ const Messages = () => {
     { field: 'time', headerName: 'Time' },
   ]
 
-  if (loading) {
-    return <CSpinner />
+  if (!minimumTimeElapsed || loading) {
+    return <Skeleton style={{ height: 200 }} />
   }
 
   return (

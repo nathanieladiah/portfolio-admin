@@ -1,12 +1,5 @@
-import {
-  CButton,
-  CCard,
-  CCardBody,
-  CCardSubtitle,
-  CCardText,
-  CCardTitle,
-  CSpinner,
-} from '@coreui/react'
+import { CButton, CCard, CCardBody, CCardSubtitle, CCardText, CCardTitle } from '@coreui/react'
+import { Skeleton } from '@mui/material'
 import { doc, getDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -16,8 +9,17 @@ const Message = () => {
   const [message, setMessage] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const [minimumTimeElapsed, setMinimumTimeElapsed] = useState(false)
+  const minimumTime = 500
+
   const navigate = useNavigate()
   const params = useParams()
+
+  useEffect(() => {
+    setTimeout(() => {
+      setMinimumTimeElapsed(true)
+    }, minimumTime)
+  }, [])
 
   useEffect(() => {
     const fetchMessage = async () => {
@@ -33,8 +35,8 @@ const Message = () => {
     fetchMessage()
   }, [navigate, params.messageId])
 
-  if (loading) {
-    return <CSpinner />
+  if (!minimumTimeElapsed || loading) {
+    return <Skeleton style={{ height: 200 }} />
   }
 
   const { name, content, email, timestamp } = message
@@ -44,10 +46,15 @@ const Message = () => {
       <CCardBody>
         <CCardTitle>{name}</CCardTitle>
         <CCardSubtitle className="mb-2 text-body-secondary">
-          {email} - {timestamp.toDate().toLocaleString()}
+          {email} - {timestamp.toDate().toLocaleString('en-GB')}
         </CCardSubtitle>
         <CCardText className="mt-4">{content}</CCardText>
-        <CButton color="primary" type="button" onClick={() => navigate('/messages')}>
+        <CButton
+          className="mt-3"
+          color="primary"
+          type="button"
+          onClick={() => navigate('/messages')}
+        >
           Back to messages
         </CButton>
       </CCardBody>
