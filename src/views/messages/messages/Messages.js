@@ -2,11 +2,18 @@ import { CSpinner } from '@coreui/react'
 import { DataGrid } from '@mui/x-data-grid'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
-import { db } from '../../firebase.config'
+import { useNavigate } from 'react-router-dom'
+import { db } from '../../../firebase.config'
 
 const Messages = () => {
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState(null)
+
+  const navigate = useNavigate()
+
+  const handleRowClick = (param, event) => {
+    navigate(`/messages/${param.id}`)
+  }
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -56,11 +63,12 @@ const Messages = () => {
           rows={messages.map((message) => ({
             id: message.id,
             email: message.data.email,
-            message: message.data.message,
+            message: message.data.content,
             name: message.data.name,
             time: message.data.timestamp.toDate().toLocaleString('en-GB'),
           }))}
           columns={columns}
+          onRowClick={handleRowClick}
         />
       )}
     </div>
