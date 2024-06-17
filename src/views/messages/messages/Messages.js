@@ -9,20 +9,11 @@ const Messages = () => {
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState(null)
 
-  const [minimumTimeElapsed, setMinimumTimeElapsed] = useState(false)
-  const minimumTime = 500
-
   const navigate = useNavigate()
 
   const handleRowClick = (param, event) => {
     navigate(`/messages/${param.id}`)
   }
-
-  useEffect(() => {
-    setTimeout(() => {
-      setMinimumTimeElapsed(true)
-    }, minimumTime)
-  }, [])
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -58,7 +49,7 @@ const Messages = () => {
     { field: 'time', headerName: 'Time' },
   ]
 
-  if (!minimumTimeElapsed || loading) {
+  if (loading) {
     return <Skeleton style={{ height: 200 }} />
   }
 

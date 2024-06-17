@@ -9,17 +9,8 @@ const Message = () => {
   const [message, setMessage] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const [minimumTimeElapsed, setMinimumTimeElapsed] = useState(false)
-  const minimumTime = 500
-
   const navigate = useNavigate()
   const params = useParams()
-
-  useEffect(() => {
-    setTimeout(() => {
-      setMinimumTimeElapsed(true)
-    }, minimumTime)
-  }, [])
 
   useEffect(() => {
     const fetchMessage = async () => {
@@ -35,7 +26,7 @@ const Message = () => {
     fetchMessage()
   }, [navigate, params.messageId])
 
-  if (!minimumTimeElapsed || loading) {
+  if (loading) {
     return <Skeleton style={{ height: 200 }} />
   }
 
