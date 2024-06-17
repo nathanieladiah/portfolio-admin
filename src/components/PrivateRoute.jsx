@@ -1,4 +1,4 @@
-import { CSpinner } from '@coreui/react'
+import { Skeleton } from '@mui/material'
 import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import useAuthStatus from '../hooks/useAuthStatus'
@@ -7,7 +7,7 @@ const PrivateRoute = () => {
   const { loggedIn, checkingStatus } = useAuthStatus()
 
   if (checkingStatus) {
-    return <CSpinner color="primary" variant="grow" />
+    return <Skeleton />
   }
 
   return loggedIn ? <Outlet /> : <Navigate to="/login" />
