@@ -28,7 +28,7 @@ const Messages = () => {
         querySnap.forEach((doc) => {
           return messages.push({
             id: doc.id,
-            data: doc.data(),
+            ...doc.data(),
           })
         })
 
@@ -62,10 +62,10 @@ const Messages = () => {
           }}
           rows={messages.map((message) => ({
             id: message.id,
-            email: message.data.email,
-            message: message.data.content,
-            name: message.data.name,
-            time: message.data.timestamp.toDate().toLocaleString('en-GB'),
+            email: message.email,
+            message: message.content,
+            name: message.name,
+            time: message.timestamp.toDate().toLocaleString('en-GB'),
           }))}
           columns={columns}
           onRowClick={handleRowClick}
