@@ -1,4 +1,4 @@
-import { cilEnvelopeOpen, cilSpeedometer } from '@coreui/icons'
+import { cilEnvelopeOpen, cilFolderOpen, cilSpeedometer } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CNavItem } from '@coreui/react'
 import React from 'react'
@@ -15,6 +15,12 @@ const _nav = [
     name: 'Messages',
     to: '/messages',
     icon: <CIcon icon={cilEnvelopeOpen} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Projects',
+    to: '/projects',
+    icon: <CIcon icon={cilFolderOpen} customClassName="nav-icon" />,
   },
 ]
 
