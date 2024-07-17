@@ -24,6 +24,12 @@ const Projects = () => {
 
   const navigate = useNavigate()
 
+  const handleRowClick = (id) => {
+    navigate(`/projects/${id}`)
+  }
+
+  const changeDisplay = (id) => {}
+
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -70,17 +76,21 @@ const Projects = () => {
           <CTableBody>
             {projects.map((project) => (
               <CTableRow v-for="item in tableItems" key={project.id}>
-                <CTableDataCell className="text-center">
+                <CTableDataCell className="text-center" onClick={() => handleRowClick(project.id)}>
                   <CImage rounded thumbnail src={project.image} width={200} height={100} />
                 </CTableDataCell>
-                <CTableDataCell>
+                <CTableDataCell onClick={() => handleRowClick(project.id)}>
                   <div>{project.title}</div>
                 </CTableDataCell>
-                <CTableDataCell>
+                <CTableDataCell onClick={() => handleRowClick(project.id)}>
                   <div>{project.description}</div>
                 </CTableDataCell>
                 <CTableDataCell className="text-center">
-                  <CIcon icon={cilCheckCircle} className="text-success" />
+                  <CIcon
+                    icon={cilCheckCircle}
+                    className="text-success"
+                    onClick={() => changeDisplay(project.id)}
+                  />
                 </CTableDataCell>
               </CTableRow>
             ))}
